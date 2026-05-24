@@ -9,5 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.2.0"
+  }
 }
