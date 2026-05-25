@@ -12,6 +12,7 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1",
+    "express-fileupload": "^1.5.2",
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.2.0"
   },
