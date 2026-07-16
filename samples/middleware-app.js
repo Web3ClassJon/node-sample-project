@@ -1,11 +1,16 @@
 const express = require("express");
 const app = express();
 
+const someMiddleware = (req, res, next) => {
+    app.get("/foo", someMiddleware, (req, res) => {
+        res.send("<h1>Hello</h1>");
+    }
+}
 
 app.use((req, res, next) => {
     console.log("https check....");
     next();
-});
+}
 
 // app.use((req, res, next) => {
 //     console.log("authentication check");
@@ -14,7 +19,9 @@ app.use((req, res, next) => {
 //         req.user = user;
 //     }
 //     next();
-// })
+// }else{
+//      next(new Error("User is not authenticated"));
+//});
 
 const authCheck = (req, res, next) => {
      console.log("authentication check");
@@ -33,7 +40,7 @@ app.get("/", (req, res) => {
     }
     res.send("Hi");
 });
-
+//route handler
 app.get("/members-only", authCheck, (req, res) => {
     res.send("Welcome to the club");
 })
