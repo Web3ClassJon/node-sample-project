@@ -117,20 +117,19 @@ app.post('/login', async(req, res) => {
     res.send("Hello " + req.userName);
   })
 
-  // import the login() function
-  const {login} = require("./modules/user-helpers");
+  // // import the login() function
+  // const {login} = require("./modules/user-helpers");
 
-  // destructure the req.body object to get the email and password from it
-  const {email, password} = req.body;
+  // // destructure the req.body object to get the email and password from it
+  // const {email, password} = req.body;
 
-  // attempt to login
-  const user = login(email, password);
-  if(user){
-    res.send(`Hello ${user.firstName}`);
-  }else{
-    res.send("Invalid Login Attempt");
-  }
-});
+  // // attempt to login
+  // const user = login(email, password);
+  // if(user){
+  //   res.send(`Hello ${user.firstName}`);
+  // }else{
+  //   res.send("Invalid Login Attempt");
+  // }
 
 // START THE SERVER
 const port = 8080; // We'll run the server on port 8080
