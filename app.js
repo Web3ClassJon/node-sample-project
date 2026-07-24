@@ -71,7 +71,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async(req, res) => {
   const bcrypt = require('bcrypt');
-  const {getUserByEmail} = require("./modules/user-helper");
+  const {getUserByEmail} = require("./modules/user-helpers");
   const {email, password:passwordEntered} = req.body;
   const user = getUserByEmail(email);
     if(user){
@@ -105,7 +105,7 @@ app.post('/login', async(req, res) => {
 
   function loginCheck(req, res, next){
     const {sessionId} = req.cookies;
-    if(sessionId && sessions[sessionsId]){
+    if(sessionId && sessions[sessionId]){
       req.userName = sessions[sessionId];
       next();
     }else{
@@ -114,7 +114,7 @@ app.post('/login', async(req, res) => {
   }
 
   app.get("/members-only", loginCheck, (req, res) => {
-    res.send("Hello" + req.userName);
+    res.send("Hello " + req.userName);
   })
 
   // import the login() function
