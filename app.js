@@ -13,6 +13,10 @@ app.set('view engine', 'ejs');
 // allow the app to receive data from form submits
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// set up the cookie parser
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 // ROUTES
 app.get('/', (req, res) => {
   res.render('default-layout', {
@@ -65,7 +69,7 @@ app.get('/login', (req, res) => {
   });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async(req, res) => {
   const bcrypt = require('bcrypt');
   const {getUserByEmail} = require("./modules/user-helper");
   const {email, password:passwordEntered} = req.body;
@@ -73,6 +77,11 @@ app.post('/login', (req, res) => {
     if(user){
       const result = await bcrypt.compare(passwordEntered, user.password)
       if(result){
+        //res.send("Logged In!");
+        const timeStamp = new Date().getTime();
+        res.cookie("sessionId", timeStamp);
+        sessions[timeStamp] = user.firstName;
+        console.log(sessions);
         res.send("Logged In!");
       }else{
         res.send("Wrong password!");
@@ -80,8 +89,33 @@ app.post('/login', (req, res) => {
     }else{
       res.send("Invalid Email");
     }
+  });
 
-  const sessions = {}
+  app.get("/logout", (req, res) => {
+    const {sessionId} = req.cookies;
+    if(sessionId && sessions[sessionId]){
+      delete sessions[sessionId];
+      res.clearCookie("sessionId");
+      console.log(sessions);
+    }
+    res.send("You are logged out");
+  })
+
+  const sessions = {};
+
+  function loginCheck(req, res, next){
+    const {sessionId} = req.cookies;
+    if(sessionId && sessions[sessionsId]){
+      req.userName = sessions[sessionId];
+      next();
+    }else{
+      res.redirect("/login");
+    }
+  }
+
+  app.get("/members-only", loginCheck, (req, res) => {
+    res.send("Hello" + req.userName);
+  })
 
   // import the login() function
   const {login} = require("./modules/user-helpers");
