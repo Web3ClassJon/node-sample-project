@@ -91,31 +91,31 @@ app.post('/login', async(req, res) => {
     }
   });
 
-  app.get("/logout", (req, res) => {
-    const {sessionId} = req.cookies;
-    if(sessionId && sessions[sessionId]){
-      delete sessions[sessionId];
-      res.clearCookie("sessionId");
-      console.log(sessions);
-    }
-    res.send("You are logged out");
-  })
-
-  const sessions = {};
-
-  function loginCheck(req, res, next){
-    const {sessionId} = req.cookies;
-    if(sessionId && sessions[sessionId]){
-      req.userName = sessions[sessionId];
-      next();
-    }else{
-      res.redirect("/login");
-    }
+app.get("/logout", (req, res) => {
+  const {sessionId} = req.cookies;
+  if(sessionId && sessions[sessionId]){
+    delete sessions[sessionId];
+    res.clearCookie("sessionId");
+    console.log(sessions);
   }
+  res.send("You are logged out");
+})
 
-  app.get("/members-only", loginCheck, (req, res) => {
-    res.send("Hello " + req.userName);
-  })
+const sessions = {};
+
+function loginCheck(req, res, next){
+  const {sessionId} = req.cookies;
+  if(sessionId && sessions[sessionId]){
+    req.userName = sessions[sessionId];
+    next();
+  }else{
+    res.redirect("/login");
+  }
+}
+
+app.get("/members-only", loginCheck, (req, res) => {
+  res.send("Hello " + req.userName);
+})
 
   // // import the login() function
   // const {login} = require("./modules/user-helpers");
