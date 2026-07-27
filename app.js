@@ -40,11 +40,12 @@ app.get('/signup', (req, res) => {
   });
 });
 
-app.post('/signup-confirmation', (req, res) => {
+app.post('/signup-confirmation', async(req, res) => {
 
   // import the addUser function
-  const {addUser} = require("./modules/user-helpers");
 
+  const {addUser} = require("./modules/user-helpers");
+  const bcrypt = require('bcrypt');
   // destructure the req.body object into individual variables
   const {firstName, lastName, email, password, confirmPassword} = req.body;
 
@@ -52,8 +53,9 @@ app.post('/signup-confirmation', (req, res) => {
   if(firstName && lastName && email && password && confirmPassword){
     // make sure the passwords match
     if(password === confirmPassword){
+      const hashedPassword = await bcrypt.hash(password, 10);
       // If everything is valid, then add the new user
-      addUser({firstName, lastName, email, password});
+      addUser({firstName, lastName, email, password: hashedPassword});
       res.send("Thank you for signing up!")
     }else{
       res.send("Invalid form submit - Passwords do not match!")
